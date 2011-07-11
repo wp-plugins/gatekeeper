@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Gatekeeper
-Plugin URI: 
+Plugin URI: http://wordpress.org/extend/plugins/gatekeeper
 Description: Gatekeeper allows administrators to take a WordPress site offline quickly and easily while leaving it fully accessible to administrators and other authorized users. Site visitors will be shown or redirected to a specified offline page. An optional blacklist can be used for permanent bans.
 Version: 0.8.1 BETA
 Author: Jamie Wilson

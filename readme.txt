@@ -42,6 +42,10 @@ the htaccess file is an option, but it's extra work and only works until my IP a
 No. Gatekeeper protects all WordPress pages (except admin and login pages) from everyone but those whitelisted, so redirecting to a WordPress page
 would create an undesirable redirect loop.
 
+= How do I use an offline page? =
+
+The offline page can be any web-friendly page: HTML, PHP, text, etc. It's not required, but recommended, to keep this file in a separate directory to keep it from being confused with WordPress files.
+
 = Can Gatekeeper protect non-WordPress pages? =
 
 No. 
@@ -53,7 +57,7 @@ No.
 == Changelog ==
 
 = 0.8 =
-* First release candidate.
+* Initial release (beta version).
 
 == Upgrade Notice ==
 

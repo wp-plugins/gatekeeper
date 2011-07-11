@@ -6,11 +6,11 @@ Requires at least: 3.0
 Tested up to: 3.3
 Stable tag: 0.8
 
-Gatekeeper allows administrators to take a WordPress site offline quickly and easily for maintenance, testing, upgrades, etc.
+Gatekeeper allows administrators to take a WordPress site offline while leaving it accessible to authorized users for maintenance, testing, etc.
 
 == Description ==
 
-Gatekeeper allows administrators to take a WordPress site offline quickly and easily through the WordPress administrator interface. Site visitors can be redirected to an offline page or pages can be replaced with offline pages. An IP-based whitelist will allow authorized people access to the site during offline times and an optional blacklist can be used to permanently ban users by IP or IP range.
+Gatekeeper allows administrators to take a WordPress site offline quickly and easily while leaving it fully accessible to administrators and other authorized users. Site visitors will be shown or redirected to a specified offline page. An optional blacklist can be used for permanent bans.
 
 ** Features **
 

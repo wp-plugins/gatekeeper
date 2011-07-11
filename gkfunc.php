@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Gatekeeper
-Plugin URI: http://TK
-Description: Gatekeeper allows administrators to take a WordPress site offline quickly and easily for maintenance, testing, upgrades, etc. Site visitors can be redirected to an offline page or pages can be replaced with offline pages. An IP-based whitelist will allow authorized people access to the site during offline times and an optional blacklist can be used to permanently ban users by IP or IP range.
+Plugin URI: 
+Description: Gatekeeper allows administrators to take a WordPress site offline quickly and easily while leaving it fully accessible to administrators and other authorized users. Site visitors will be shown or redirected to a specified offline page. An optional blacklist can be used for permanent bans.
 Version: 0.8 BETA
 Author: Jamie Wilson
 Author URI: http://jamiewilson.net

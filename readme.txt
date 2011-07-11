@@ -4,15 +4,13 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gatekeeper, offline, maintenance, whitelist, blacklist, access, ip, coming soon
 Requires at least: 3.0
 Tested up to: 3.3
-Stable tag: trunk
+Stable tag: 0.8
 
 Gatekeeper allows administrators to take a WordPress site offline quickly and easily for maintenance, testing, upgrades, etc.
 
 == Description ==
 
-Gatekeeper allows administrators to take a WordPress site offline quickly and easily through the WordPress administrator interface.
-Site visitors can be redirected to an offline page or pages can be replaced with offline pages. An IP-based whitelist will allow authorized 
-people access to the site during offline times and an optional blacklist can be used to permanently ban users by IP or IP range.
+Gatekeeper allows administrators to take a WordPress site offline quickly and easily through the WordPress administrator interface. Site visitors can be redirected to an offline page or pages can be replaced with offline pages. An IP-based whitelist will allow authorized people access to the site during offline times and an optional blacklist can be used to permanently ban users by IP or IP range.
 
 ** Features **
 

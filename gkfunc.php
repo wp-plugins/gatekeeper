@@ -309,7 +309,6 @@ function gatekeeper_watch_the_gate() {
 		}		
 	}	
 	
-	
 	# check to see if Gatekeeper is active. If not, there's no need to continue (except for blacklists).
 	if (get_option('gatekeeper_active') != 'true') {
 		return;

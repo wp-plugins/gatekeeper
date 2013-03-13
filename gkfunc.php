@@ -3,12 +3,12 @@
 Plugin Name: Gatekeeper
 Plugin URI: http://wordpress.org/extend/plugins/gatekeeper
 Description: Gatekeeper allows administrators to take a WordPress site offline quickly and easily while leaving it fully accessible to administrators and other authorized users. Site visitors will be shown or redirected to a specified offline page. An optional blacklist can be used for permanent bans.
-Version: 0.8.1 BETA
+Version: 1.0
 Author: Jamie Wilson
 Author URI: http://jamiewilson.net
 License: GPL2
   
-    Copyright © 2011 Jamie Wilson (email: wpdev@jamiewilson.net)
+    Copyright © 2011-2013 Jamie Wilson (email: wpdev@jamiewilson.net)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -30,9 +30,11 @@ register_activation_hook(__FILE__,'gatekeeper_install');
 register_deactivation_hook( __FILE__, 'gatekeeper_remove' );
 
 // REGISTER ACTIONS
-add_action('admin_head', 'admin_register_head');
 add_action('init', 'gatekeeper_watch_the_gate', 1);
 add_action('admin_notices', 'gatekeeper_admin_status');
+add_action('admin_head', 'gatekeeper_css_register');
+add_action('admin_head', 'gatekeeper_js_register');
+
 
 // SETUP ADMIN MENU
 if (is_admin()) {
@@ -83,10 +85,15 @@ function gatekeeper_remove() {
 }
 
 // REGISTER EXTERNAL CSS
-function admin_register_head() {
-	$siteurl = get_option('siteurl');
-	$url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/style.css';
-	echo "<link rel='stylesheet' type='text/css' href='$url' />\n";
+function gatekeeper_css_register() {
+	wp_register_style("gatekeeper-css", plugins_url("style.css", __FILE__), false, false);
+	wp_enqueue_style("gatekeeper-css");
+}
+
+// REGISTER EXTERNAL JAVASCRIPT
+function gatekeeper_js_register() {
+	wp_register_script("gatekeeper-js", plugins_url("gk-jquery.js", __FILE__) );
+	wp_enqueue_script("gatekeeper-js");
 }
 
 // ADD MENU LINK
@@ -99,20 +106,7 @@ function gatekeeper_admin_status() {
 	/* UPPER RIGHT CORNER */
 
 	if (get_option('gatekeeper_active') == 'true') {
-		echo "<div style='float: right; 
-								margin: 0 10px; 
-								padding: 3px 5px;
-								background-color: red; 
-								color: white;
-								font-weight: bold;
-								text-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0;
-								-moz-border-radius-bottomleft: 5px;
-								-moz-border-radius-bottomright: 5px;
-								-webkit-border-radius-bottomleft: 5px;
-								-webkit-border-radius-bottomright: 5px;
-								border-bottom-left-radius: 5px;
-								border-bottom-right-radius: 5px;
-								'><a href='" . get_admin_url() . "tools.php?page=gatekeeper' style='color: white; text-decoration: none;' title='Gatekeeper is active'>Offline</a></div>";
+		echo "<div id='gk-active-notifier'><a href='" . get_admin_url() . "tools.php?page=gatekeeper' title='Gatekeeper is active'>Offline</a></div>";
 	}
 }
 
@@ -133,9 +127,6 @@ function gatekeeper_options() {
 		<div style="background: url('<?php echo $GKPATH; ?>images/banner_bg.png') repeat-x; width: 100%; margin-bottom: 14px;"><img src="<?php echo $GKPATH; ?>images/banner_logo.png" /></div>
 		<?php if ($_GET['settings-updated']) {
 			echo "<div style='color: red;'>Settings saved.</div>"; } ?>
-		<?php /*<p>
-			[ GATEKEEPER DEVELOPMENT VERSION - NOT FOR DISTRIBUTION ]
-		</p>*/ ?>
 		
 		<div id="gk-main">
 		<form method="post" action="options.php">
@@ -179,86 +170,82 @@ function gatekeeper_options() {
 			</table>
 			
 			<?php /* WHITELIST TABLE */ ?>
-			<table class="form-table gk-option-table" style="margin-top: 20px;">
-				<thead>
+			<div id="gk-whitelist">
+				<div id="gk-whitelist-title" class="gk-section-title">Whitelist</div>
+				<table id="gk-whitelist-table" class="form-table gk-option-table" style="margin-top: 20px;">
+					
 					<tr valign="top">
-						<th colspan="2" class="gk-section-title">Whitelist</th>
+						<td colspan="2">Allow the following to access the site when it is offline for everyone else.</td>				
 					</tr>
-				</thead>
-				
-				<tr valign="top">
-					<td colspan="2">Allow the following to access the site when it is offline for everyone else.</td>				
-				</tr>
-				
-				<?php /* WHITELIST ADMINS */ ?>
-				<tr valign="top">
-					<th scope="row"><label for="gatekeeper_allowadmins" title="Don't apply offline status to logged-in administrators.">Whitelist Logged-in Admins:</label></th>
-					<td><input name="gatekeeper_allowadmins" type="checkbox" value="true" <?php if (get_option('gatekeeper_allowadmins') == "true") { echo "CHECKED"; } ?> /></td>	
-				</tr>
-				
-				<?php /* AUTO-PROTECT ADMIN IP */ ?>
-				<tr valign="top">
-					<th scope="row"><label for="gatekeeper_autoprotect_adminip" title="Automatically whitelist your current IP address to prevent accidentally lock-out.">Auto-Protect Admin IP:</label></th>	
-					<td>
-						<input name="gatekeeper_autoprotect_adminip" type="checkbox" value="true" <?php if (get_option('gatekeeper_autoprotect_adminip') == "true") { echo "CHECKED"; } ?>					
-					</td>			
-				</tr>
-				
-				<?php /* ADMIN IP */ ?>
-				<tr valign="top">
-					<th scope="row"><label for="gatekeeper_adminip" title="Your current IP (will be auto-whitelisted when you save).">Administrator IP:</label></th>
-					<td>
-						<input name="gatekeeper_adminipDISPLAY" type="text" disabled="disabled" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" />
-						<input type="hidden" name="gatekeeper_adminip" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" />
-					</td>			
-				</tr>
-				
-				<?php /* WHITELIST */ ?>
-				<tr valign="top">
-					<th scope="row"><label for="gatekeeper_whitelist" title="Whitelist: one per line. Examples: 192.168.10.103, 192.168.10.*, 192.168.10.[0-9]">Whitelist:</label></th>
-					<td>
-						<textarea name="gatekeeper_whitelist"><?php echo get_option('gatekeeper_whitelist'); ?></textarea>					
-					</td>				
-				</tr>							
-			</table>
+					
+					<?php /* WHITELIST ADMINS */ ?>
+					<tr valign="top">
+						<th scope="row"><label for="gatekeeper_allowadmins" title="Don't apply offline status to logged-in administrators.">Whitelist Logged-in Admins:</label></th>
+						<td><input name="gatekeeper_allowadmins" type="checkbox" value="true" <?php if (get_option('gatekeeper_allowadmins') == "true") { echo "CHECKED"; } ?> /></td>	
+					</tr>
+					
+					<?php /* AUTO-PROTECT ADMIN IP */ ?>
+					<tr valign="top">
+						<th scope="row"><label for="gatekeeper_autoprotect_adminip" title="Automatically whitelist your current IP address to prevent accidentally lock-out.">Auto-Protect Admin IP:</label></th>	
+						<td>
+							<input name="gatekeeper_autoprotect_adminip" type="checkbox" value="true" <?php if (get_option('gatekeeper_autoprotect_adminip') == "true") { echo "CHECKED"; } ?>					
+						</td>			
+					</tr>
+					
+					<?php /* ADMIN IP */ ?>
+					<tr valign="top">
+						<th scope="row"><label for="gatekeeper_adminip" title="Your current IP (will be auto-whitelisted when you save).">Administrator IP:</label></th>
+						<td>
+							<input name="gatekeeper_adminipDISPLAY" type="text" disabled="disabled" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" />
+							<input type="hidden" name="gatekeeper_adminip" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" />
+						</td>			
+					</tr>
+					
+					<?php /* WHITELIST */ ?>
+					<tr valign="top">
+						<th scope="row"><label for="gatekeeper_whitelist" title="Whitelist: one per line. Examples: 192.168.10.103, 192.168.10.*, 192.168.10.[0-9]">Whitelist:</label></th>
+						<td>
+							<textarea name="gatekeeper_whitelist"><?php echo get_option('gatekeeper_whitelist'); ?></textarea>					
+						</td>				
+					</tr>							
+				</table>
+			</div>
 			
 			<?php /* BLACKLIST TABLE */ ?>
-			<table class="form-table gk-option-table" style="margin-top: 20px;">
-				<thead>
+			<div id="gk-blacklist">
+				<div id="gk-blacklist-title" class="gk-section-title">Blacklist</div>
+				<table id="gk-blacklist-table" class="form-table gk-option-table" style="margin-top: 20px;">
+					
 					<tr valign="top">
-						<th colspan="2" class="gk-section-title">Blacklist</th>				
+						<td colspan="2">Prevent blacklisted IPs from accessing the site at any time, including login and registration pages.</td>				
 					</tr>
-				</thead>
-				
-				<tr valign="top">
-					<td colspan="2">Prevent blacklisted IPs from accessing the site at any time, including login and registration pages.</td>				
-				</tr>
-				
-				<?php /* BLACKLIST BEHAVIOR */ ?>
-				<tr valign="top">
-					<th scope="row"><label for="gatekeeper_blacklist_behavior" title="Redirect to an offline page or display an offline page without redirecting the page.">Offline Behavior:</label></th>
-					<td>
-						<input type="radio" name="gatekeeper_blacklist_behavior" value="redirect" <?php if (get_option('gatekeeper_blacklist_behavior') != 'replace') { echo "checked"; } ?> />Redirect (301 Moved Permanently) <br />
-						<input type="radio" name="gatekeeper_blacklist_behavior" value="replace" <?php if (get_option('gatekeeper_blacklist_behavior') == 'replace') { echo "checked"; } ?> />Replace page 					
-					</td>				
-				</tr>
-				
-				<?php /* BLACKLIST PAGE */ ?>
-				<tr valign="top">
-					<th scope="row"><label for="gatekeeper_blacklist_redirect_page" title="Display this page to blacklisted IPs. This cannot be a WordPress-managed page.">Blacklist page:</label></th>
-					<td>
-						<input name="gatekeeper_blacklist_redirect_page" type="text" style="width: 400px;" value="<?php echo get_option('gatekeeper_blacklist_redirect_page'); ?>" />					
-					</td>				
-				</tr>
-				
-				<?php /* BLACKLIST */ ?>
-				<tr valign="top">
-					<th scope="row"><label for="gatekeeper_blacklist" title="Blacklist: one per line. Examples: 192.168.10.103, 192.168.10.*, 192.168.10.[0-9]">Blacklist:</label></th>
-					<td>
-						<textarea name="gatekeeper_blacklist"><?php echo get_option('gatekeeper_blacklist'); ?></textarea>					
-					</td>				
-				</tr>				
-			</table>
+					
+					<?php /* BLACKLIST BEHAVIOR */ ?>
+					<tr valign="top">
+						<th scope="row"><label for="gatekeeper_blacklist_behavior" title="Redirect to an offline page or display an offline page without redirecting the page.">Offline Behavior:</label></th>
+						<td>
+							<input type="radio" name="gatekeeper_blacklist_behavior" value="redirect" <?php if (get_option('gatekeeper_blacklist_behavior') != 'replace') { echo "checked"; } ?> />Redirect (301 Moved Permanently) <br />
+							<input type="radio" name="gatekeeper_blacklist_behavior" value="replace" <?php if (get_option('gatekeeper_blacklist_behavior') == 'replace') { echo "checked"; } ?> />Replace page 					
+						</td>				
+					</tr>
+					
+					<?php /* BLACKLIST PAGE */ ?>
+					<tr valign="top">
+						<th scope="row"><label for="gatekeeper_blacklist_redirect_page" title="Display this page to blacklisted IPs. This cannot be a WordPress-managed page.">Blacklist page:</label></th>
+						<td>
+							<input name="gatekeeper_blacklist_redirect_page" type="text" style="width: 400px;" value="<?php echo get_option('gatekeeper_blacklist_redirect_page'); ?>" />					
+						</td>				
+					</tr>
+					
+					<?php /* BLACKLIST */ ?>
+					<tr valign="top">
+						<th scope="row"><label for="gatekeeper_blacklist" title="Blacklist: one per line. Examples: 192.168.10.103, 192.168.10.*, 192.168.10.[0-9]">Blacklist:</label></th>
+						<td>
+							<textarea name="gatekeeper_blacklist"><?php echo get_option('gatekeeper_blacklist'); ?></textarea>					
+						</td>				
+					</tr>				
+				</table>
+			</div>
 				
 			<p class="submit">
 				<input type="submit" class="button-primary" value="Save Changes" />			

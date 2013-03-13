@@ -3,7 +3,7 @@ Contributors: jamiewilson
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J3ETMQWMPY586
 Tags: gatekeeper, offline, maintenance, whitelist, blacklist, access, ip, coming soon
 Requires at least: 3.0
-Tested up to: 3.3
+Tested up to: 3.5.1
 Stable tag: trunk
 
 Gatekeeper allows administrators to take a WordPress site offline while leaving it accessible to authorized users for maintenance, testing, etc.
@@ -55,6 +55,12 @@ No.
 1. The Gatekeeper administration page
 
 == Changelog ==
+
+= 1.0 =
+* Updated code to avoid conflicts with other plugins and themes that were resulting in "Fatal error: Cannot redeclare admin_register_head()" errors.
+* Consolidated plugin styles (CSS) into one stylesheet, instead of having some inline styles scattered throughout the code.
+* Whitelist/Blacklist options are now collapsible (and collapsed by default).
+* Minor miscellaneous visual improvements.
 
 = 0.8 =
 * Initial release (beta version).

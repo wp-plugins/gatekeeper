@@ -60,6 +60,9 @@ If the plugin doesn’t appear to be working, first check your whitelist. Make s
 
 == Changelog ==
 
+= 1.0.1 =
+* Minor bug fix to eliminate an “undefined index” error.
+
 = 1.0 =
 * Updated code to avoid conflicts with other plugins and themes that were resulting in "Fatal error: Cannot redeclare admin_register_head()" errors.
 * Consolidated plugin styles (CSS) into one stylesheet, instead of having some inline styles scattered throughout the code.

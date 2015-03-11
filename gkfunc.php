@@ -3,12 +3,12 @@
 Plugin Name: Gatekeeper
 Plugin URI: http://wordpress.org/extend/plugins/gatekeeper
 Description: Gatekeeper allows administrators to take a WordPress site offline quickly and easily while leaving it fully accessible to administrators and other authorized users. Site visitors will be shown or redirected to a specified offline page. An optional blacklist can be used for permanent bans.
-Version: 1.0
+Version: 1.0.1
 Author: Jamie Wilson
 Author URI: http://jamiewilson.net
 License: GPL2
   
-    Copyright © 2011-2013 Jamie Wilson (email: wpdev@jamiewilson.net)
+    Copyright © 2011-2015 Jamie Wilson (email: wpdev@jamiewilson.net)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -125,7 +125,7 @@ function gatekeeper_options() {
 	
 	<div class="wrap">
 		<div style="background: url('<?php echo $GKPATH; ?>images/banner_bg.png') repeat-x; width: 100%; margin-bottom: 14px;"><img src="<?php echo $GKPATH; ?>images/banner_logo.png" /></div>
-		<?php if ($_GET['settings-updated']) {
+		<?php if (isset($_GET['settings-updated'])) {
 			echo "<div style='color: red;'>Settings saved.</div>"; } ?>
 		
 		<div id="gk-main">
@@ -267,7 +267,6 @@ function gatekeeper_options() {
 					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 					<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 					</form>
-					<p><a href="http://www.weusecoins.com/" target="_new">Bitcoin</a> donations:<br /><i>14X5hXFJVv9Xty9k4zcSGxoj3MB7ZkTdpy</i></p>
 				</div>
 			</div>
 			

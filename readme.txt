@@ -3,7 +3,7 @@ Contributors: jamiewilson
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J3ETMQWMPY586
 Tags: gatekeeper, offline, maintenance, whitelist, blacklist, access, ip, coming soon
 Requires at least: 3.0
-Tested up to: 3.5.1
+Tested up to: 4.1.1
 Stable tag: trunk
 
 Gatekeeper allows administrators to take a WordPress site offline while leaving it accessible to authorized users for maintenance, testing, etc.

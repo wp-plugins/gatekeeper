@@ -50,6 +50,10 @@ The offline page can be any web-friendly page: HTML, PHP, text, etc. It's not re
 
 No. 
 
+= Help! It doesn’t work!! =
+
+If the plugin doesn’t appear to be working, first check your whitelist. Make sure you’re not testing from a whitelisted IP address. If _Auto-Protect Admin IP_ is checked, the plugin will attempt to automatically whitelist your IP address and let you see the site normally. If you have _Whitelist Logged-in Admins_ checked, the plugin will let you view the site normally as long as you are logged into WordPress. The plugin is designed to do its best to not lock you out of your own site.
+
 == Screenshots ==
 
 1. The Gatekeeper administration page
